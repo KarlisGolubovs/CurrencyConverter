@@ -3,7 +3,7 @@
 
 require_once 'vendor/autoload.php';
 
-use App\Modules\CurrencyConverter;
+use CurrencyConverter_PD\app\CurrencyConverter;
 
 $converter = new CurrencyConverter();
 

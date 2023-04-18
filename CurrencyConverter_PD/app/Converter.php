@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules;
+namespace CurrencyConverter_PD\app;
 
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use SimpleXMLElement;
-use Exception;
 
 
 class CurrencyConverter
