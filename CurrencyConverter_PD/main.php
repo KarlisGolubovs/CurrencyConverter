@@ -7,6 +7,7 @@ use CurrencyConverter_PD\app\CurrencyConverter;
 
 $converter = new CurrencyConverter();
 
+
 // Read user input
 echo 'Enter the amount to convert (e.g. 10.99): ';
 $amount = (float)readline();
