@@ -1,52 +1,31 @@
 <?php
 
-namespace CurrencyConverter_PD\app;
+namespace App;
 
-use Exception;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use SimpleXMLElement;
-
 
 class CurrencyConverter
 {
-    private Client $client;
-    private array $rates;
+    private getApiClient $client;
+    private SimpleXMLElement $xmlData;
 
     public function __construct()
     {
-        $this->client = new Client();
-        $this->rates = [];
+        $this->client = new getApiClient();
+        $this->xmlData = $this->client->fetchData();
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function getExchangeRate($from, $to)
+    public function convert(float $amount, string $toCurrency): float
     {
-        $from = strtoupper($from);
-        $to = strtoupper($to);
-
-        if (empty($this->rates)) {
-            try {
-                $response = $this->client->request('GET', 'https://www.latvijasbanka.lv/vk/ecb.xml');
-            } catch (GuzzleException $e) {
+        foreach ($this->xmlData->Currencies->Currency as $currency) {
+            if ($currency->ID == $toCurrency) {
+                return $currency->Rate * $amount;
             }
-            $xml = new SimpleXMLElement((string) $response->getBody());
-
-            foreach ($xml->Cube->Cube->Cube as $cube) {
-                $currency = (string) $cube['currency'];
-                $rate = (float) $cube['rate'];
-                $this->rates[$currency] = $rate;
-            }
-
-            $this->rates['EUR'] = 1.0;
         }
 
-        if (isset($this->rates[$from]) && isset($this->rates[$to])) {
-            return $this->rates[$to] / $this->rates[$from];
-        } else {
-            throw new Exception("Unknown currency: $from or $to");
-        }
+        throw new \Exception('Invalid currency code');
     }
 }

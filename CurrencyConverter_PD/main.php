@@ -1,14 +1,11 @@
-<?php
-
+<?php declare(strict_types=1);
 
 require_once 'vendor/autoload.php';
 
-use CurrencyConverter_PD\app\CurrencyConverter;
+use App\CurrencyConverter;
 
 $converter = new CurrencyConverter();
 
-
-// Read user input
 echo 'Enter the amount to convert (e.g. 10.99): ';
 $amount = (float)readline();
 
@@ -18,13 +15,9 @@ $from = strtoupper(readline());
 echo 'Enter the target currency (e.g. USD): ';
 $to = strtoupper(readline());
 
-// Convert the amount
 try {
-    $rate = $converter->getExchangeRate($from, $to);
-    $converted = $amount * $rate;
+    $converted = $converter->convert($amount, $to);
     printf("%.2f %s = %.2f %s\n", $amount, $from, $converted, $to);
 } catch (\Exception $e) {
     echo "Error: " . $e->getMessage() . "\n";
 }
-
-
